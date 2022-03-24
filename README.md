@@ -7,6 +7,8 @@ This app is intented to work with `JQuery-File-Upload <https://github.com/blueim
 
 License: `MIT-Zero <https://romanrm.net/mit-zero>`__.
 
+[![Testing](https://github.com/Vader19695/django-chunked-upload/actions/workflows/testing.yml/badge.svg)](https://github.com/Vader19695/django-chunked-upload/actions/workflows/testing.yml)
+
 Demo
 ----
 
