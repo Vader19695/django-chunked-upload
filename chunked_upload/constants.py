@@ -1,7 +1,9 @@
 import django
 
-
-from django.utils.translation import ugettext as _
+if django.VERSION < (4, 0):
+    from django.utils.translation import ugettext as _
+else:
+    from django.utils.translation import gettext as _
 
 
 class http_status:
