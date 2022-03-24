@@ -1,4 +1,4 @@
-name: Chunked Upload package
+name: Testing
 
 on:
   - push
