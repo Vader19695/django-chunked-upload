@@ -1,4 +1,4 @@
-django-chunked-upload
+django-chunky-upload
 =====================
 
 This simple django app enables users to upload large files to Django in multiple chunks, with the ability to resume if the upload is interrupted.
@@ -6,6 +6,8 @@ This simple django app enables users to upload large files to Django in multiple
 This app is intented to work with `JQuery-File-Upload <https://github.com/blueimp/jQuery-File-Upload>`__ by `Sebastian Tschan <https://blueimp.net>`__ (`documentation <https://github.com/blueimp/jQuery-File-Upload/wiki>`__).
 
 License: `MIT-Zero <https://romanrm.net/mit-zero>`__.
+
+This is forked from the wonderful work done in  `django-chunked-upload <https://github.com/juliomalegria/django-chunked-upload>`__.
 
 Demo
 ----

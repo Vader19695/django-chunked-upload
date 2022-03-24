@@ -11,10 +11,10 @@ with open("VERSION.txt", "r") as v:
 with open("README.rst", "r") as r:
     readme = r.read()
 
-download_url = "https://github.com/juliomalegria/django-chunked-upload/tarball/%s"
+download_url = "https://github.com/Vader19695/django-chunky-upload/tarball/%s"
 
 setup(
-    name="django-chunked-upload",
+    name="django-chunky-upload",
     packages=[
         "chunked_upload",
         "chunked_upload.migrations",
@@ -27,8 +27,8 @@ setup(
     ),
     long_description=readme,
     author="Jaryd Rester",
-    author_email="juliomalegria@gmail.com",
-    url="https://github.com/juliomalegria/django-chunked-upload",
+    author_email="pypi@jarydrester.com",
+    url="https://github.com/Vader19695/django-chunky-upload",
     download_url=download_url % version,
     install_requires=[],
     license="MIT-Zero",
