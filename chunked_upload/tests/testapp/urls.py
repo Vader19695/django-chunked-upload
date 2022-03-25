@@ -16,6 +16,6 @@ from chunked_upload.tests.testapp.views import ChunkedUploadTestView
 # thirdparty
 
 urlpatterns = [
-    path("upload/", ChunkedUploadTestView, name="upload"),
+    path("upload/", ChunkedUploadTestView, name="upload-"),
     path("upload/<uuid:upload_id>/", ChunkedUploadTestView, name="upload"),
 ]

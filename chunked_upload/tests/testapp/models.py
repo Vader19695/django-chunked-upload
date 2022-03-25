@@ -13,8 +13,8 @@ from chunked_upload.models import AbstractChunkedUpload
 
 # thirdparty
 
-TEST_CHUNKED_UPLOAD_MODEL = "testapp.TestChunkedUploadModel"
+TEST_CHUNKED_UPLOAD_MODEL = "testapp.ChunkedUploadAbstractTestModel"
 
 
-class TestChunkedUploadModel(AbstractChunkedUpload):
+class ChunkedUploadAbstractTestModel(AbstractChunkedUpload):
     pass
