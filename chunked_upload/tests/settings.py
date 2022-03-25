@@ -24,7 +24,6 @@ INSTALLED_APPS = [
     "chunked_upload",
 ]
 
-CHUNKED_UPLOAD_EXPIRATION_DELTA = 3000
 SECRET_KEY = "testing"
 ROOT_URLCONF = "tests.testapp.urls"
 USE_TZ = True

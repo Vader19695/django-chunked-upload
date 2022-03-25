@@ -12,7 +12,7 @@ from .settings import (
     DEFAULT_MODEL_USER_FIELD_NULL,
     DEFAULT_MODEL_USER_FIELD_BLANK,
 )
-from .constants import CHUNKED_UPLOAD_CHOICES, UPLOADING
+from .constants import CHUNKED_UPLOAD_CHOICES, COMPLETE, UPLOADING
 
 
 class AbstractChunkedUpload(models.Model):
@@ -38,7 +38,7 @@ class AbstractChunkedUpload(models.Model):
 
     @property
     def expired(self) -> bool:
-        return self.expires_on <= timezone.now()
+        return self.expires_on > timezone.now()
 
     @property
     def md5(self):
@@ -50,8 +50,14 @@ class AbstractChunkedUpload(models.Model):
         return self._md5
 
     def completed_task(self):
+        self.status = COMPLETE
         self.completed_on = timezone.now()
-        self.save(update_fields=("completed_on",))
+        self.save(
+            update_fields=(
+                "completed_on",
+                "status",
+            )
+        )
 
     def delete(self, delete_file=True, *args, **kwargs):
         if self.file:
