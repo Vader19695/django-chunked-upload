@@ -1,18 +1,24 @@
-import hashlib
+#!/usr/bin/env python3
+"""Setups abstract models for tracking Chunky uploads."""
 
+__author__ = "Jaryd Rester"
+__copyright__ = "2022-03-25"
+
+# stdlib
+from io import BytesIO
+import hashlib
+from uuid import uuid4
+
+# django
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
-from django.conf import settings
-from django.core.files.uploadedfile import UploadedFile
 from django.utils import timezone
 
-from .settings import (
-    EXPIRATION_DELTA,
-    UPLOAD_TO,
-    STORAGE,
-    DEFAULT_MODEL_USER_FIELD_NULL,
-    DEFAULT_MODEL_USER_FIELD_BLANK,
-)
-from .constants import CHUNKED_UPLOAD_CHOICES, COMPLETE, UPLOADING
+# local django
+from chunked_upload.settings import UPLOAD_TO, STORAGE, EXPIRATION_DELTA
+
+# thirdparty
+from chunked_upload.constants import CHUNKED_UPLOAD_CHOICES, COMPLETE, UPLOADING
 
 
 class AbstractChunkedUpload(models.Model):
@@ -22,7 +28,7 @@ class AbstractChunkedUpload(models.Model):
     Inherit from this model to implement your own.
     """
 
-    upload_id = models.UUIDField(unique=True, editable=False)
+    upload_id = models.UUIDField(unique=True, editable=False, default=uuid4)
     file = models.FileField(max_length=255, upload_to=UPLOAD_TO, storage=STORAGE)
     filename = models.CharField(max_length=255)
     offset = models.BigIntegerField(default=0)
@@ -38,7 +44,7 @@ class AbstractChunkedUpload(models.Model):
 
     @property
     def expired(self) -> bool:
-        return self.expires_on > timezone.now()
+        return self.expires_on < timezone.now()
 
     @property
     def md5(self):
@@ -74,11 +80,18 @@ class AbstractChunkedUpload(models.Model):
             self.status,
         )
 
-    def append_chunk(self, chunk, chunk_size=None, save=True):
+    def append_chunk(self, chunk: InMemoryUploadedFile, chunk_size=None, save=True):
         self.file.close()
         with open(self.file.path, mode="ab") as file_obj:  # mode = append+binary
+            chunk_file = chunk.file
+            if isinstance(chunk_file, bytes):
+                chunk_binary = chunk_file
+            elif isinstance(chunk_file, BytesIO):
+                print("here")
+                chunk_binary = chunk_file.read()
+
             file_obj.write(
-                chunk.read()
+                chunk_binary
             )  # We can use .read() safely because chunk is already in memory
 
         if chunk_size is not None:
@@ -95,21 +108,9 @@ class AbstractChunkedUpload(models.Model):
     def get_uploaded_file(self):
         self.file.close()
         self.file.open(mode="rb")  # mode = read+binary
-        return UploadedFile(file=self.file, name=self.filename, size=self.offset)
+        return InMemoryUploadedFile(
+            file=self.file, name=self.filename, size=self.offset
+        )
 
     class Meta:
         abstract = True
-
-
-class ChunkedUpload(AbstractChunkedUpload):
-    """
-    Default chunked upload model.
-    """
-
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name="chunked_uploads",
-        null=DEFAULT_MODEL_USER_FIELD_NULL,
-        blank=DEFAULT_MODEL_USER_FIELD_BLANK,
-    )

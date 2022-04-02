@@ -5,16 +5,17 @@ __author__ = "Jaryd Rester"
 __copyright__ = "2022-03-24"
 
 # stdlib
-import re
 from io import BytesIO
-from typing import Any, Dict, Tuple
+import json
+from typing import Tuple
 
 # django
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import UploadedFile
+from django.core.files.uploadedfile import UploadedFile, InMemoryUploadedFile
 from django.db.models import QuerySet
-from django.http import HttpRequest
+from django.http import HttpRequest, QueryDict
+from django.http.multipartparser import MultiPartParser
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -29,6 +30,7 @@ from chunked_upload.settings import MAX_BYTES
 from chunked_upload.views.helpers import is_authenticated
 
 # thirdparty
+from ast import literal_eval
 
 
 class ChunkedUploadBaseView(View):
@@ -36,7 +38,7 @@ class ChunkedUploadBaseView(View):
     Base view for the rest of chunked upload views.
     """
 
-    def create_chunked_upload(self, **attrs) -> AbstractChunkedUpload:
+    def create_chunked_upload(self, save=False, **attrs) -> AbstractChunkedUpload:
         """
         Creates a new AbstractChunkedUpload when required
         :param attrs: various attributes that should be saved in the AbstractChunkedUpload
@@ -45,9 +47,9 @@ class ChunkedUploadBaseView(View):
         :return: a new AbstractChunkedUpload to be used
         :rtype: AbstractChunkedUpload
         """
-        chunked_upload: AbstractChunkedUpload = self.model(
-            **attrs, file=ContentFile(BytesIO(b""), "")
-        )
+        chunked_upload: AbstractChunkedUpload = self.model(**attrs)
+
+        chunked_upload.file.save(name="", content=ContentFile(b""), save=save)
         # file starts empty
         return chunked_upload
 
@@ -76,7 +78,17 @@ class ChunkedUploadBaseView(View):
         :rtype: UploadedFile
         """
         try:
-            return request.FILES[self.field_name]
+            json_body = request.body.decode().replace("'", '"')
+            dictionary_body = literal_eval(json_body)
+            return InMemoryUploadedFile(
+                bytes(dictionary_body["file"]),
+                size=len(dictionary_body["file"]),
+                field_name="test",
+                name=dictionary_body["filename"],
+                content_type="binary",
+                charset="utf-8",
+            )
+
         except KeyError:
             raise ChunkedUploadError(
                 status=http_status.HTTP_400_BAD_REQUEST,
@@ -151,7 +163,8 @@ class ChunkedUploadBaseView(View):
         :return: the AbstractChunkedUpload to handle the chunk
         :rtype: AbstractChunkedUpload
         """
-        upload_id = request.POST.get("upload_id")
+        upload_id = self.kwargs.get("upload_id")
+
         if upload_id is not None:
             chunked_upload: AbstractChunkedUpload = get_object_or_404(
                 self.get_queryset(request), upload_id=upload_id
@@ -160,7 +173,9 @@ class ChunkedUploadBaseView(View):
         else:
             attrs = {"filename": chunk.name}
             attrs.update(self.get_extra_attrs(request))
-            chunked_upload = self.create_chunked_upload(**attrs)
+            chunked_upload = self.create_chunked_upload(save=False, **attrs)
+
+        return chunked_upload
 
     def _put_chunk(self, request: HttpRequest):
         chunk = self.get_file_from_request(request)

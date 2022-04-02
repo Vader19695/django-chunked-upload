@@ -19,6 +19,7 @@ from django.test import TestCase
 # local django
 from chunked_upload.constants import COMPLETE
 from chunked_upload.models import ChunkedUpload
+from chunked_upload.models.abstract_models import AbstractChunkedUpload
 from chunked_upload.settings import EXPIRATION_DELTA
 from chunked_upload.tests.testapp.models import (
     TEST_CHUNKED_UPLOAD_MODEL,
@@ -30,40 +31,6 @@ from model_bakery import baker
 
 
 class ChunkedUploadAbstractTestModelTests(TestCase):
-    def test__creating_chunked_upload_works_as_expected(self):
-        # assign
-        model_instance = baker.make(TEST_CHUNKED_UPLOAD_MODEL)
-
-        # act
-        model_instance_qs = ChunkedUploadAbstractTestModel.objects.get(
-            pk=model_instance.pk
-        )
-
-        # assert
-        self.assertIsNotNone(model_instance_qs)
-
-    @patch(
-        "django.utils.timezone.now",
-        Mock(return_value=datetime(2000, 1, 1, tzinfo=timezone.utc)),
-    )
-    def test__marking_chunked_upload_complete_works_as_expected(self):
-        # assign
-        model_instance: ChunkedUploadAbstractTestModel = baker.make(
-            TEST_CHUNKED_UPLOAD_MODEL
-        )
-
-        # act
-        model_instance.completed_task()
-        model_instance.refresh_from_db()
-
-        # assert
-        self.assertEqual(model_instance.status, COMPLETE)
-        self.assertEqual(
-            model_instance.completed_on, datetime(2000, 1, 1, tzinfo=timezone.utc)
-        )
-
-
-class ChunkedUploadModelTests(TestCase):
     @patch(
         "django.utils.timezone.now",
         Mock(return_value=datetime(2000, 1, 1, tzinfo=timezone.utc)),
@@ -103,11 +70,11 @@ class ChunkedUploadModelTests(TestCase):
 
     @patch(
         "django.utils.timezone.now",
-        Mock(return_value=datetime(2000, 1, 1, tzinfo=timezone.utc)),
+        Mock(return_value=datetime(2020, 1, 1, tzinfo=timezone.utc)),
     )
     @patch(
         "chunked_upload.models.ChunkedUpload.expires_on",
-        PropertyMock(return_value=datetime(2020, 1, 1, tzinfo=timezone.utc)),
+        PropertyMock(return_value=datetime(2000, 1, 1, tzinfo=timezone.utc)),
     )
     def test__expired_on_property_on_ChunkedUpload_model_returns_expired_as_expected(
         self,
@@ -120,11 +87,11 @@ class ChunkedUploadModelTests(TestCase):
 
     @patch(
         "django.utils.timezone.now",
-        Mock(return_value=datetime(2010, 1, 1, tzinfo=timezone.utc)),
+        Mock(return_value=datetime(2008, 1, 1, tzinfo=timezone.utc)),
     )
     @patch(
         "chunked_upload.models.ChunkedUpload.expires_on",
-        PropertyMock(return_value=datetime(2008, 1, 1, tzinfo=timezone.utc)),
+        PropertyMock(return_value=datetime(2010, 1, 1, tzinfo=timezone.utc)),
     )
     def test__expired_on_property_on_ChunkedUpload_model_returns_nonexpired_as_expected(
         self,
@@ -166,3 +133,13 @@ class ChunkedUploadModelTests(TestCase):
             model_instance.file.read(), BytesIO(b"test file new data").read()
         )
         self.assertEqual(model_instance.offset, 40)
+
+
+class ChunkedUploadTest(TestCase):
+    def test__ChunkedUpload_is_subclass_of_AbstractChunkedUpload(self):
+        # assert
+        self.assertTrue(issubclass(ChunkedUpload, AbstractChunkedUpload))
+
+    def test__ChunkedUpload_has_a_user_field_as_expected(self):
+        # assert
+        self.assertTrue(hasattr(ChunkedUpload, "user"))
