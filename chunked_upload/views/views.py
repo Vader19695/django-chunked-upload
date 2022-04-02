@@ -97,6 +97,8 @@ class ChunkedUploadView(ChunkedUploadBaseView):
 
             chunked_upload.complete_upload()
 
+            self.complete_upload(chunked_upload)
+
             return Response(
                 self.get_response_data(chunked_upload, request),
                 status=http_status.HTTP_200_OK,

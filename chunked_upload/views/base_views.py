@@ -281,3 +281,6 @@ class ChunkedUploadBaseView(View):
             return self._put(request, *args, **kwargs)
         except ChunkedUploadError as error:
             return Response(error.data, status=error.status_code)
+
+    def complete_upload(self, chunked_upload: AbstractChunkedUpload):
+        """Placeholder method to call after completing an upload"""
