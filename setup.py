@@ -8,8 +8,6 @@ except ImportError:
 with open("VERSION.txt", "r") as v:
     version = v.read().strip()
 
-with open("README.md", "r") as r:
-    readme = r.read()
 
 download_url = "https://github.com/Vader19695/django-chunky-upload/tarball/%s"
 
@@ -25,7 +23,6 @@ setup(
         "Upload large files to Django in multiple chunks, with the "
         "ability to resume if the upload is interrupted."
     ),
-    long_description=readme,
     author="Jaryd Rester",
     author_email="pypi@jarydrester.com",
     url="https://github.com/Vader19695/django-chunky-upload",
