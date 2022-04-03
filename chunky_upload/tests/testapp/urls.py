@@ -13,4 +13,4 @@ from django.urls import path, include
 
 # thirdparty
 
-urlpatterns = [path("", include("chunked_upload.urls"))]
+urlpatterns = [path("", include("chunky_upload.urls"))]

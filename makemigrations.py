@@ -18,7 +18,7 @@ from django.core.management import call_command
 
 # thirdparty
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "chunked_upload"))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "chunky_upload"))
 
 
 def boot_django():
@@ -28,7 +28,11 @@ def boot_django():
         DATABASES={
             "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": "memlocal"}
         },
-        INSTALLED_APPS=("chunked_upload",),
+        INSTALLED_APPS=(
+            "django.contrib.auth",
+            "django.contrib.contenttypes",
+            "chunky_upload",
+        ),
         TIME_ZONE="UTC",
         USE_TZ=True,
     )
@@ -36,4 +40,4 @@ def boot_django():
 
 
 boot_django()
-call_command("makemigrations", "chunked_upload")
+call_command("makemigrations", "chunky_upload")

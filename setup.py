@@ -16,9 +16,9 @@ download_url = "https://github.com/Vader19695/django-chunky-upload/tarball/%s"
 setup(
     name="django-chunky-upload",
     packages=[
-        "chunked_upload",
-        "chunked_upload.migrations",
-        "chunked_upload.management",
+        "chunky_upload",
+        "chunky_upload.migrations",
+        "chunky_upload.management",
     ],
     version=version,
     description=(

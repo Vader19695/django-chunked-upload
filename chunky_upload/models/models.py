@@ -11,8 +11,8 @@ from django.conf import settings
 from django.db import models
 
 # local django
-from chunked_upload.models.abstract_models import AbstractChunkedUpload
-from chunked_upload.settings import (
+from chunky_upload.models.abstract_models import AbstractChunkedUpload
+from chunky_upload.settings import (
     DEFAULT_MODEL_USER_FIELD_BLANK,
     DEFAULT_MODEL_USER_FIELD_NULL,
 )
@@ -28,7 +28,7 @@ class ChunkedUpload(AbstractChunkedUpload):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="chunked_uploads",
+        related_name="chunky_uploads",
         null=DEFAULT_MODEL_USER_FIELD_NULL,
         blank=DEFAULT_MODEL_USER_FIELD_BLANK,
     )

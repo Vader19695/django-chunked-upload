@@ -16,12 +16,12 @@ from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
 
 # local django
-from chunked_upload.constants import http_status
-from chunked_upload.models import ChunkedUpload
-from chunked_upload.views.base_views import ChunkedUploadBaseView
-from chunked_upload.response import Response
-from chunked_upload.settings import MAX_BYTES
-from chunked_upload.views.helpers import is_authenticated
+from chunky_upload.constants import http_status
+from chunky_upload.models import ChunkedUpload
+from chunky_upload.views.base_views import ChunkedUploadBaseView
+from chunky_upload.response import Response
+from chunky_upload.settings import MAX_BYTES
+from chunky_upload.views.helpers import is_authenticated
 
 # thirdparty
 

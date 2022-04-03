@@ -15,10 +15,10 @@ from django.db import models
 from django.utils import timezone
 
 # local django
-from chunked_upload.settings import UPLOAD_TO, STORAGE, EXPIRATION_DELTA
+from chunky_upload.settings import UPLOAD_TO, STORAGE, EXPIRATION_DELTA
 
 # thirdparty
-from chunked_upload.constants import CHUNKED_UPLOAD_CHOICES, COMPLETE, UPLOADING
+from chunky_upload.constants import CHUNKED_UPLOAD_CHOICES, COMPLETE, UPLOADING
 
 
 class AbstractChunkedUpload(models.Model):

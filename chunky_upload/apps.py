@@ -15,6 +15,6 @@ from django.apps import AppConfig
 
 
 class ChunkedUploadConfig(AppConfig):
-    name = "chunked_upload"
-    verbose_name = "Chunked Upload"
-    default_auto_field = "django.db.models.AutoField"
+    name = "chunky_upload"
+    verbose_name = "Chunky Upload"
+    default_auto_field = "django.db.models.BigAutoField"

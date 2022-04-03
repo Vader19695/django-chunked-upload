@@ -17,7 +17,7 @@ from django.urls import reverse
 
 
 # local django
-from chunked_upload.constants import http_status
+from chunky_upload.constants import http_status
 
 # thirdparty
 from model_bakery import baker
@@ -47,14 +47,14 @@ class ChunkedUploadViewTests(TestCase):
         client = Client()
         original_binary_data = b"test file"
         binary_data = BytesIO(b" new test file data").getvalue()
-        chunked_upload = baker.make(
-            "chunked_upload.ChunkedUpload",
+        chunky_upload = baker.make(
+            "chunky_upload.ChunkedUpload",
             file=ContentFile(original_binary_data, "name"),
         )
 
         # act
         response = client.put(
-            reverse("upload-view", args=(chunked_upload.upload_id,)),
+            reverse("upload-view", args=(chunky_upload.upload_id,)),
             {"file": binary_data, "filename": "simplefile.txt"},
             headers={
                 "HTTP_CONTENT_RANGE": f"{len(original_binary_data)}-{len(binary_data)}/{len(binary_data) + len(original_binary_data)}",
@@ -65,10 +65,10 @@ class ChunkedUploadViewTests(TestCase):
         # assert
         self.assertEqual(response.status_code, http_status.HTTP_200_OK)
         self.assertEqual(
-            open(chunked_upload.file.path, "r").read(), "test file new test file data"
+            open(chunky_upload.file.path, "r").read(), "test file new test file data"
         )
 
-    @patch("chunked_upload.views.base_views.ChunkedUploadBaseView.complete_upload")
+    @patch("chunky_upload.views.base_views.ChunkedUploadBaseView.complete_upload")
     def test__posting_verifies_the_upload_and_marks_the_upload_as_complete(
         self, patched_complete_upload
     ):
@@ -78,14 +78,14 @@ class ChunkedUploadViewTests(TestCase):
         md5 = hashlib.md5()
         md5.update(original_binary_data)
         checksum = md5.hexdigest()
-        chunked_upload = baker.make(
-            "chunked_upload.ChunkedUpload",
+        chunky_upload = baker.make(
+            "chunky_upload.ChunkedUpload",
             file=ContentFile(original_binary_data, "name"),
         )
 
         # act
         response = client.post(
-            reverse("upload-view", args=(chunked_upload.upload_id,)),
+            reverse("upload-view", args=(chunky_upload.upload_id,)),
             data={
                 "md5": checksum,
             },
@@ -103,14 +103,14 @@ class ChunkedUploadViewTests(TestCase):
         md5 = hashlib.md5()
         md5.update(original_binary_data + b"testing")
         checksum = md5.hexdigest()
-        chunked_upload = baker.make(
-            "chunked_upload.ChunkedUpload",
+        chunky_upload = baker.make(
+            "chunky_upload.ChunkedUpload",
             file=ContentFile(original_binary_data, "name"),
         )
 
         # act
         response = client.post(
-            reverse("upload-view", args=(chunked_upload.upload_id,)),
+            reverse("upload-view", args=(chunky_upload.upload_id,)),
             data={
                 "md5": checksum,
             },

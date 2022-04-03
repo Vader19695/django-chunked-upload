@@ -9,9 +9,9 @@ __copyright__ = "2022-03-25"
 # django
 from django.urls import path
 
-from chunked_upload.views import ChunkedUploadView
 
 # local django
+from chunky_upload.views import ChunkedUploadView
 
 # thirdparty
 

@@ -17,10 +17,10 @@ from django.utils import timezone
 from django.test import TestCase
 
 # local django
-from chunked_upload.constants import COMPLETE
-from chunked_upload.models import ChunkedUpload
-from chunked_upload.models.abstract_models import AbstractChunkedUpload
-from chunked_upload.settings import EXPIRATION_DELTA
+from chunky_upload.constants import COMPLETE
+from chunky_upload.models import ChunkedUpload
+from chunky_upload.models.abstract_models import AbstractChunkedUpload
+from chunky_upload.settings import EXPIRATION_DELTA
 
 # thirdparty
 from model_bakery import baker
@@ -69,7 +69,7 @@ class ChunkedUploadAbstractTestModelTests(TestCase):
         Mock(return_value=datetime(2020, 1, 1, tzinfo=timezone.utc)),
     )
     @patch(
-        "chunked_upload.models.ChunkedUpload.expires_on",
+        "chunky_upload.models.ChunkedUpload.expires_on",
         PropertyMock(return_value=datetime(2000, 1, 1, tzinfo=timezone.utc)),
     )
     def test__expired_on_property_on_ChunkedUpload_model_returns_expired_as_expected(
@@ -86,7 +86,7 @@ class ChunkedUploadAbstractTestModelTests(TestCase):
         Mock(return_value=datetime(2008, 1, 1, tzinfo=timezone.utc)),
     )
     @patch(
-        "chunked_upload.models.ChunkedUpload.expires_on",
+        "chunky_upload.models.ChunkedUpload.expires_on",
         PropertyMock(return_value=datetime(2010, 1, 1, tzinfo=timezone.utc)),
     )
     def test__expired_on_property_on_ChunkedUpload_model_returns_nonexpired_as_expected(

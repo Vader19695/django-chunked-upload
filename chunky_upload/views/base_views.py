@@ -17,11 +17,11 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
 
 # local django
-from chunked_upload.constants import COMPLETE, http_status
-from chunked_upload.exceptions import ChunkedUploadError
-from chunked_upload.models import AbstractChunkedUpload
-from chunked_upload.response import Response
-from chunked_upload.views.helpers import is_authenticated
+from chunky_upload.constants import COMPLETE, http_status
+from chunky_upload.exceptions import ChunkedUploadError
+from chunky_upload.models import AbstractChunkedUpload
+from chunky_upload.response import Response
+from chunky_upload.views.helpers import is_authenticated
 
 # thirdparty
 from ast import literal_eval

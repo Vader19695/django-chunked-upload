@@ -9,7 +9,7 @@ __copyright__ = "2022-03-23"
 # django
 
 # local django
-from chunked_upload.models import AbstractChunkedUpload
+from chunky_upload.models import AbstractChunkedUpload
 
 # thirdparty
 

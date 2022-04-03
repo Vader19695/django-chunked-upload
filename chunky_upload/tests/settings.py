@@ -20,8 +20,8 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.sites",
-    "chunked_upload.tests.testapp.apps.TestAppConfig",
-    "chunked_upload",
+    "chunky_upload.tests.testapp.apps.TestAppConfig",
+    "chunky_upload",
 ]
 
 SECRET_KEY = "testing"
