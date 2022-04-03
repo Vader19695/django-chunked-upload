@@ -40,7 +40,7 @@ jobs:
   coveralls-finish:
     needs: build
     # If pushed / is a pull request against main repo
-    if: (github.event_name == 'push' && github.repository == 'Vader19695/django-chunky-upload' && github.ref_name == 'main'
+    if: github.event_name == 'push' && github.repository == 'Vader19695/django-chunky-upload' && github.ref_name == 'main'
 
     runs-on: ubuntu-latest
     steps:
