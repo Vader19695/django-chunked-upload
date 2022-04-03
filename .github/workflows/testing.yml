@@ -28,7 +28,7 @@ jobs:
       - name: Publish coverage to Coveralls
         # If pushed / is a pull request against main repo AND
         # we're running on Linux (this action only supports Linux)
-        if: github.event_name == 'push' && matrix.python-version == "3.10"
+        if: github.event_name == 'push' && github.repository == 'Vader19695/django-chunky-upload' && matrix.python-version == "3.10"
 
         uses: AndreMiras/coveralls-python-action@v20201129
         with:
