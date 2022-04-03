@@ -14,3 +14,4 @@ pip-log.txt
 *.idea
 .tox
 chunked_uploads/
+.coverage
