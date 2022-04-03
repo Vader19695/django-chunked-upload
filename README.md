@@ -1,6 +1,11 @@
 # django-chunky-upload
 
-[![Testing](https://github.com/Vader19695/django-chunky-upload/actions/workflows/testing.yml/badge.svg?branch=main)](https://github.com/Vader19695/django-chunky-upload/actions/workflows/testing.yml)
+<p align="center">
+<a href="https://github.com/Vader19695/django-chunky-upload/actions"><img alt="Actions Status" src="https://github.com/Vader19695/django-chunky-upload/workflows/Testing/badge.svg"></a>
+<a href="https://pypi.org/project/django-chunky-upload/"><img alt="PyPi Version" src="https://badgen.net/pypi/v/django-chunky-upload?icon=pypi"/></a>
+<a href='https://coveralls.io/github/Vader19695/django-chunky-upload?branch=readme-updates'><img src='https://coveralls.io/repos/github/Vader19695/django-chunky-upload/badge.svg?branch=readme-updates' alt='Coverage Status' /></a>
+<a href="https://github.com/Vader19695/django-chunky-upload"><img alt="Code style: black" src="https://img.shields.io/badge/code%20style-black-000000.svg"></a>
+</p>
 
 This simple django app enables users to upload large files to Django in multiple chunks, with the ability to resume if the upload is interrupted.
 

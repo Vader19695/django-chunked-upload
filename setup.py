@@ -27,6 +27,7 @@ setup(
     author_email="pypi@jarydrester.com",
     url="https://github.com/Vader19695/django-chunky-upload",
     download_url=download_url % version,
+    python_requires="~=3.7",
     install_requires=[],
     license="MIT-Zero",
 )
