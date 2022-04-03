@@ -6,24 +6,18 @@ __copyright__ = "2022-03-24"
 
 # stdlib
 import re
-from io import BytesIO
-from typing import Any, Dict, Tuple
+from typing import Any, Dict
+import uuid
 
 # django
 from django.core.exceptions import ValidationError
-from django.core.files.base import ContentFile
-from django.core.files.uploadedfile import UploadedFile
-from django.db.models import QuerySet
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import View
 
 # local django
-from chunked_upload.constants import COMPLETE, CHUNKED_UPLOAD_CHOICES, http_status
-from chunked_upload.exceptions import ChunkedUploadError
-from chunked_upload.models import AbstractChunkedUpload, ChunkedUpload
+from chunked_upload.constants import http_status
+from chunked_upload.models import ChunkedUpload
 from chunked_upload.views.base_views import ChunkedUploadBaseView
 from chunked_upload.response import Response
 from chunked_upload.settings import MAX_BYTES
@@ -86,27 +80,32 @@ class ChunkedUploadView(ChunkedUploadBaseView):
             "expires": chunked_upload.expires_on,
         }
 
-    def _post(self, request: HttpRequest, *args, **kwargs):
-        try:
-            # Execute validation
-            self.validate(request)
-
+    def _post(self, request: HttpRequest, upload_id: uuid = None, *args, **kwargs):
+        if upload_id is None:
             chunked_upload = self._put_chunk(request)
-
             self._save(chunked_upload)
+        else:
+            # Grab the chunked upload
+            chunked_upload = get_object_or_404(ChunkedUpload, upload_id=upload_id)
 
-            chunked_upload.complete_upload()
+        request_data = self.parse_request_body(request)
 
-            self.complete_upload(chunked_upload)
+        md5 = request_data.get("md5")
 
-            return Response(
-                self.get_response_data(chunked_upload, request),
-                status=http_status.HTTP_200_OK,
-            )
-        except ValidationError as err:
-            return Response(err, status=http_status.HTTP_400_BAD_REQUEST)
+        self.md5_check(chunked_upload, md5)
 
-    def _put(self, request, upload_id=None, *args, **kwargs):
+        # Mark the upload as complete
+        chunked_upload.complete_upload()
+
+        self.complete_upload(chunked_upload)
+
+        # Create Response
+        return Response(
+            self.get_response_data(chunked_upload=chunked_upload, request=request),
+            status=http_status.HTTP_200_OK,
+        )
+
+    def _put(self, request, upload_id: uuid = None, *args, **kwargs):
         try:
             self.validate(request)
 

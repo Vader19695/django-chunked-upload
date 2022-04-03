@@ -21,10 +21,6 @@ from chunked_upload.constants import COMPLETE
 from chunked_upload.models import ChunkedUpload
 from chunked_upload.models.abstract_models import AbstractChunkedUpload
 from chunked_upload.settings import EXPIRATION_DELTA
-from chunked_upload.tests.testapp.models import (
-    TEST_CHUNKED_UPLOAD_MODEL,
-    ChunkedUploadAbstractTestModel,
-)
 
 # thirdparty
 from model_bakery import baker
@@ -40,7 +36,7 @@ class ChunkedUploadAbstractTestModelTests(TestCase):
         model_instance = baker.make(ChunkedUpload)
 
         # act
-        model_instance.completed_task()
+        model_instance.complete_upload()
         model_instance.refresh_from_db()
 
         # assert

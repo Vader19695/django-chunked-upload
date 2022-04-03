@@ -5,7 +5,10 @@ __author__ = "Jaryd Rester"
 __copyright__ = "2022-03-23"
 
 # stdlib
+import hashlib
+from ast import literal_eval
 from io import BytesIO
+from unittest.mock import patch
 
 # django
 from django.core.files.base import ContentFile
@@ -63,4 +66,60 @@ class ChunkedUploadViewTests(TestCase):
         self.assertEqual(response.status_code, http_status.HTTP_200_OK)
         self.assertEqual(
             open(chunked_upload.file.path, "r").read(), "test file new test file data"
+        )
+
+    @patch("chunked_upload.views.base_views.ChunkedUploadBaseView.complete_upload")
+    def test__posting_verifies_the_upload_and_marks_the_upload_as_complete(
+        self, patched_complete_upload
+    ):
+        # assign
+        client = Client()
+        original_binary_data = b"test file"
+        md5 = hashlib.md5()
+        md5.update(original_binary_data)
+        checksum = md5.hexdigest()
+        chunked_upload = baker.make(
+            "chunked_upload.ChunkedUpload",
+            file=ContentFile(original_binary_data, "name"),
+        )
+
+        # act
+        response = client.post(
+            reverse("upload-view", args=(chunked_upload.upload_id,)),
+            data={
+                "md5": checksum,
+            },
+            content_type="application/json",
+        )
+
+        # assert
+        self.assertEqual(response.status_code, http_status.HTTP_200_OK)
+        patched_complete_upload.assert_called()
+
+    def test__posting_raises_an_exception_when_md5_is_incorrect(self):
+        # assign
+        client = Client()
+        original_binary_data = b"test file"
+        md5 = hashlib.md5()
+        md5.update(original_binary_data + b"testing")
+        checksum = md5.hexdigest()
+        chunked_upload = baker.make(
+            "chunked_upload.ChunkedUpload",
+            file=ContentFile(original_binary_data, "name"),
+        )
+
+        # act
+        response = client.post(
+            reverse("upload-view", args=(chunked_upload.upload_id,)),
+            data={
+                "md5": checksum,
+            },
+            content_type="application/json",
+        )
+
+        # assert
+        self.assertEqual(response.status_code, http_status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            literal_eval(response.content.decode())["detail"],
+            "md5 checksum does not match",
         )

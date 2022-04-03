@@ -55,7 +55,7 @@ class AbstractChunkedUpload(models.Model):
             self._md5 = md5.hexdigest()
         return self._md5
 
-    def completed_task(self):
+    def complete_upload(self):
         self.status = COMPLETE
         self.completed_on = timezone.now()
         self.save(

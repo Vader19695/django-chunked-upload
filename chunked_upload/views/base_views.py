@@ -5,28 +5,22 @@ __author__ = "Jaryd Rester"
 __copyright__ = "2022-03-24"
 
 # stdlib
-from io import BytesIO
-import json
-from typing import Tuple
+from typing import Dict, Tuple
 
 # django
-from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import UploadedFile, InMemoryUploadedFile
 from django.db.models import QuerySet
-from django.http import HttpRequest, QueryDict
-from django.http.multipartparser import MultiPartParser
+from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
 
 # local django
-from chunked_upload.constants import COMPLETE, CHUNKED_UPLOAD_CHOICES, http_status
+from chunked_upload.constants import COMPLETE, http_status
 from chunked_upload.exceptions import ChunkedUploadError
-from chunked_upload.models import AbstractChunkedUpload, ChunkedUpload
+from chunked_upload.models import AbstractChunkedUpload
 from chunked_upload.response import Response
-from chunked_upload.settings import MAX_BYTES
 from chunked_upload.views.helpers import is_authenticated
 
 # thirdparty
@@ -37,6 +31,8 @@ class ChunkedUploadBaseView(View):
     """
     Base view for the rest of chunked upload views.
     """
+
+    perform_md5_checksum: bool = True
 
     def create_chunked_upload(self, save=False, **attrs) -> AbstractChunkedUpload:
         """
@@ -66,6 +62,11 @@ class ChunkedUploadBaseView(View):
         ):
             queryset = queryset.filter(**{self.user_field_name: request.user})
         return queryset
+
+    def parse_request_body(self, request: HttpRequest) -> Dict:
+        json_body = request.body.decode().replace("'", '"')
+        dictionary_body = literal_eval(json_body)
+        return dictionary_body
 
     def get_file_from_request(self, request: HttpRequest) -> UploadedFile:
         """Pull the file object from the request.
@@ -257,6 +258,13 @@ class ChunkedUploadBaseView(View):
             raise ChunkedUploadError(
                 status=http_status.HTTP_403_FORBIDDEN,
                 detail="Authentication credentials were not provided",
+            )
+
+    def md5_check(self, chunk_upload: AbstractChunkedUpload, md5: str):
+        if self.perform_md5_checksum and md5 != chunk_upload.md5:
+            raise ChunkedUploadError(
+                status=http_status.HTTP_400_BAD_REQUEST,
+                detail=_("md5 checksum does not match"),
             )
 
     def _post(self, request, *args, **kwargs):
