@@ -15,5 +15,5 @@ from django.apps import AppConfig
 
 
 class TestAppConfig(AppConfig):
-    name = "chunked_upload.tests.testapp"
+    name = "chunky_upload.tests.testapp"
     verbose_name = "TestApp"

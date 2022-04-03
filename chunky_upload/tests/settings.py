@@ -20,9 +20,11 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.sites",
-    "chunked_upload.tests.testapp.apps.TestAppConfig",
-    "chunked_upload",
+    "chunky_upload.tests.testapp.apps.TestAppConfig",
+    "chunky_upload",
 ]
 
-CHUNKED_UPLOAD_EXPIRATION_DELTA = 3000
 SECRET_KEY = "testing"
+ROOT_URLCONF = "tests.testapp.urls"
+USE_TZ = True
+TIME_ZONE = "UTC"

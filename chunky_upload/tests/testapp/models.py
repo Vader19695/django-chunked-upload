@@ -9,12 +9,12 @@ __copyright__ = "2022-03-23"
 # django
 
 # local django
-from chunked_upload.models import AbstractChunkedUpload
+from chunky_upload.models import AbstractChunkedUpload
 
 # thirdparty
 
-TEST_CHUNKED_UPLOAD_MODEL = "testapp.TestChunkedUploadModel"
+TEST_CHUNKED_UPLOAD_MODEL = "testapp.ChunkedUploadAbstractTestModel"
 
 
-class TestChunkedUploadModel(AbstractChunkedUpload):
+class ChunkedUploadAbstractTestModel(AbstractChunkedUpload):
     pass
