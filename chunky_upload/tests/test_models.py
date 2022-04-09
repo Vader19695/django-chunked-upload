@@ -114,7 +114,6 @@ class ChunkedUploadAbstractTestModelTests(TestCase):
 
     def test__append_chunk_works_as_expected(self):
         # assign
-        # assign
         binary_data = BytesIO(b"test file")
         chunk_data = BytesIO(b" new data")
         content_file = ContentFile(binary_data.read(), "testfile.txt")
@@ -129,6 +128,21 @@ class ChunkedUploadAbstractTestModelTests(TestCase):
             model_instance.file.read(), BytesIO(b"test file new data").read()
         )
         self.assertEqual(model_instance.offset, 40)
+
+    @patch("chunky_upload.signals.chunky_upload_complete.send_robust")
+    def test__marking_upload_as_complete_dispatches_the_chunky_upload_complete_signal(
+        self, mocked_chunked_upload_complete
+    ):
+        # assign
+        binary_data = BytesIO(b"test file")
+        content_file = ContentFile(binary_data.read(), "testfile.txt")
+        model_instance = baker.make(ChunkedUpload, file=content_file)
+
+        # act
+        model_instance.complete_upload()
+
+        # assert
+        mocked_chunked_upload_complete.assert_called()
 
 
 class ChunkedUploadTest(TestCase):

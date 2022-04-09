@@ -16,6 +16,7 @@ from django.utils import timezone
 
 # local django
 from chunky_upload.settings import UPLOAD_TO, STORAGE, EXPIRATION_DELTA
+from chunky_upload.signals import chunky_upload_complete
 
 # thirdparty
 from chunky_upload.constants import CHUNKED_UPLOAD_CHOICES, COMPLETE, UPLOADING
@@ -63,6 +64,12 @@ class AbstractChunkedUpload(models.Model):
                 "completed_on",
                 "status",
             )
+        )
+        # Send signal that the upload is complete
+        chunky_upload_complete.send_robust(
+            sender=self.__class__,
+            upload_id=self.upload_id,
+            completed_on=self.completed_on,
         )
 
     def delete(self, delete_file=True, *args, **kwargs):
