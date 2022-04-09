@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ChunkedUpload
+from chunky_upload.models import ChunkedUpload
 
 
 class ChunkedUploadAdmin(admin.ModelAdmin):

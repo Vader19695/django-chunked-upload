@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+from setuptools import find_packages
+
 
 try:
     from setuptools import setup
@@ -22,11 +24,7 @@ download_url = "https://github.com/Vader19695/django-chunky-upload/tarball/%s"
 
 setup(
     name="django-chunky-upload",
-    packages=[
-        "chunky_upload",
-        "chunky_upload.migrations",
-        "chunky_upload.management",
-    ],
+    packages=find_packages(exclude=["*tests*"]),
     version=version,
     description=(
         "Upload large files to Django in multiple chunks, with the "
