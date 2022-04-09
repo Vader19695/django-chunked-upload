@@ -24,7 +24,7 @@ download_url = "https://github.com/Vader19695/django-chunky-upload/tarball/%s"
 
 setup(
     name="django-chunky-upload",
-    packages=find_packages(exclude=["*tests*"]),
+    packages=find_packages(exclude=["chunky_upload.tests*"]),
     version=version,
     description=(
         "Upload large files to Django in multiple chunks, with the "
