@@ -1,4 +1,6 @@
-<a href="#"><img src="docs/source/_static/django_chunky_upload-logo.png" alt="Django Chunky Upload" /></a>
+<center>
+  <a href="https://github.com/Vader19695/django-chunky-upload/blob/main/README.md"><img src="docs/source/_static/django_chunky_upload-logo.png" alt="Django Chunky Upload" width="500" /></a>
+</center>
 
 <p align="center">
 <a href="https://github.com/Vader19695/django-chunky-upload/actions"><img alt="Actions Status" src="https://github.com/Vader19695/django-chunky-upload/workflows/Testing/badge.svg"></a>
