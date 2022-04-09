@@ -1,4 +1,4 @@
-# django-chunky-upload
+<a href="#"><img src="docs/source/_static/django_chunky_upload-logo.png" alt="Django Chunky Upload" /></a>
 
 <p align="center">
 <a href="https://github.com/Vader19695/django-chunky-upload/actions"><img alt="Actions Status" src="https://github.com/Vader19695/django-chunky-upload/workflows/Testing/badge.svg"></a>
@@ -83,3 +83,9 @@ Possible error responses:
 - Size of file exceeds limit (if specified). Server responds 400 (Bad request).
 - Offsets does not match. Server responds 400 (Bad request).
 - `md5` checksums does not match. Server responds 400 (Bad request).
+
+## Helpful Links
+
+- [Documentation](https://django-chunky-upload.readthedocs.io/en/latest/)
+- [Source](https://github.com/Vader19695/django-chunky-upload)
+- [PyPI](https://pypi.org/project/django-chunky-upload/)
