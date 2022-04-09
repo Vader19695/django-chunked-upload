@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/Vader19695/django-chunky-upload/blob/main/README.md"><img src="docs/source/_static/django_chunky_upload-logo.png" alt="Django Chunky Upload" width="500" /></a>
+  <a href="https://github.com/Vader19695/django-chunky-upload/blob/main/README.md"><img src="https://raw.githubusercontent.com/Vader19695/django-chunky-upload/main/docs/source/_static/django_chunky_upload-logo.png" alt="Django Chunky Upload" width="500" /></a>
 </p>
 
 <p align="center">
